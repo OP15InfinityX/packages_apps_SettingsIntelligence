@@ -58,6 +58,8 @@ public class IndexDataConverter {
 
     private static final String SETTINGS_PACKAGE_NAME = "com.android.settings";
     private static final String NODE_NAME_PREFERENCE_SCREEN = "PreferenceScreen";
+    private static final String NODE_NAME_ANDROIDX_PREFERENCE_SCREEN =
+            "androidx.preference.PreferenceScreen";
     private static final String NODE_NAME_CHECK_BOX_PREFERENCE = "CheckBoxPreference";
     private static final String NODE_NAME_LIST_PREFERENCE = "ListPreference";
     private static final List<String> SKIP_NODES = Arrays.asList("intent", "extra");
@@ -232,7 +234,7 @@ public class IndexDataConverter {
             }
 
             String nodeName = parser.getName();
-            if (!NODE_NAME_PREFERENCE_SCREEN.equals(nodeName)) {
+            if (!isPreferenceScreenNode(nodeName)) {
                 throw new RuntimeException(
                         "XML document must start with <PreferenceScreen> tag; found"
                                 + nodeName + " at " + parser.getPositionDescription());
@@ -383,6 +385,11 @@ public class IndexDataConverter {
             }
         }
         return resourceIndexData;
+    }
+
+    private static boolean isPreferenceScreenNode(String nodeName) {
+        return NODE_NAME_PREFERENCE_SCREEN.equals(nodeName)
+                || NODE_NAME_ANDROIDX_PREFERENCE_SCREEN.equals(nodeName);
     }
 
     private void tryAddIndexDataToList(List<IndexData> list, IndexData.Builder data) {
